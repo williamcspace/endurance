@@ -1,5 +1,8 @@
 Endurance
 ===========
+
+[![Build Status](https://travis-ci.org/williamcspace/Endurance.svg)](https://travis-ci.org/williamcspace/Endurance)
+
 The Endurance is the interplanetary spacecraft that is currently on their
 voyage in search of the new world.
 
