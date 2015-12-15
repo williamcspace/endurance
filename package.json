@@ -1,0 +1,47 @@
+{
+  "name": "Endurance",
+  "description": "Space travel is dangerous",
+  "keywords": [
+    "endurance",
+    "proxy",
+    "socks5"
+  ],
+  "author": "William Chan",
+  "version": "0.1.0",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/williamcspace/endurance/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": "4.2.3"
+  },
+  "directories": {
+    "lib": "./app"
+  },
+  "main": "./app/local",
+  "bin": {
+    "sslocal": "./bin/local",
+    "ssserver": "./bin/server"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "homepage": "https://github.com/williamcspace/endurance",
+  "bugs": "https://github.com/williamcspace/endurance/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/williamcspace/endurance.git"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "gulp": "^3.9.0",
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "lru-cache": "^3.2.0",
+    "winston": "^2.1.1"
+  }
+}
