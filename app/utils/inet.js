@@ -1,7 +1,7 @@
 'use strict';
 
 exports.inet_aton = function inet_aton(ipStr) {
-  var parts = ipStr.split(".");
+  var parts = ipStr.split('.');
   if (parts.length !== 4) {
     return null;
   } else {
@@ -16,7 +16,7 @@ exports.inet_aton = function inet_aton(ipStr) {
 };
 
 exports.inet_ntoa = function inet_ntoa(buf) {
-  return buf[0] + "." + buf[1] + "." + buf[2] + "." + buf[3];
+  return buf[0] + '.' + buf[1] + '.' + buf[2] + '.' + buf[3];
 };
 
 //Converts a packed internet address to a human readable representation

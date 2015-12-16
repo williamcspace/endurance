@@ -68,8 +68,6 @@ var parseArgs = function (isServerFlag) {
   }
 
   var isServer    = isServerFlag || false;
-  var nextIsValue = false;
-  var lastKey     = null;
   var definition  = {
     '-l': 'local_port',
     '-p': 'server_port',
@@ -81,6 +79,8 @@ var parseArgs = function (isServerFlag) {
     '-t': 'timeout'
   };
 
+  var nextIsValue = false;
+  var lastKey     = null;
   _.each(args, function (arg) {
     if (nextIsValue) {
       result[lastKey] = arg;

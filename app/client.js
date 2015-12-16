@@ -1,13 +1,13 @@
 'use strict';
 
-var net       = require("net");
-var fs        = require("fs");
-var path      = require("path");
-var udpRelay  = require("./udprelay");
+var net       = require('net');
+var fs        = require('fs');
+var path      = require('path');
+var udpRelay  = require('./udprelay');
 var cli       = require('./utils/cli');
 var logger    = require('./utils/logger');
 var inet      = require('./utils/inet');
-var Encryptor = require("./crypto/encryptor");
+var Encryptor = require('./crypto/encryptor');
 var _         = require('lodash');
 
 var connections = 0;
@@ -177,7 +177,7 @@ exports.main = function (config) {
             if (!connected) {
               return;
             }
-            logger.debug("remote on data");
+            logger.debug('remote on data');
             try {
               if (encryptor) {
                 data = encryptor.decrypt(data);
@@ -198,14 +198,14 @@ exports.main = function (config) {
             }
           });
           remote.on('end', function () {
-            logger.debug("remote on end");
+            logger.debug('remote on end');
             if (connection) {
               connection.end();
             }
           });
           remote.on('error', function (e) {
-            logger.debug("remote on error");
-            logger.error("remote " + remoteAddr + ":" + remotePort + " error: " + e);
+            logger.debug('remote on error');
+            logger.error('remote ' + remoteAddr + ':' + remotePort + ' error: ' + e);
           });
           remote.on('close', function (had_error) {
             logger.debug('remote on close:' + had_error);
@@ -226,7 +226,7 @@ exports.main = function (config) {
             }
           });
           remote.setTimeout(timeout, function () {
-            logger.debug("remote on timeout");
+            logger.debug('remote on timeout');
             if (remote) {
               remote.destroy();
             }

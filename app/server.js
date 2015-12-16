@@ -120,7 +120,7 @@ exports.main = function (config) {
             logger.debug('stage = 5');
           });
           remote.on('data', function (data) {
-            logger.debug("remote on data");
+            logger.debug('remote on data');
             if (!encryptor) {
               if (remote) {
                 remote.destroy();
@@ -133,17 +133,17 @@ exports.main = function (config) {
             }
           });
           remote.on('end', function () {
-            logger.debug("remote on end");
+            logger.debug('remote on end');
             if (connection) {
               connection.end();
             }
           });
           remote.on('error', function (e) {
-            logger.debug("remote on error");
-            logger.error("remote " + remoteAddr + ":" + remotePort + " error: " + e);
+            logger.debug('remote on error');
+            logger.error('remote ' + remoteAddr + ':' + remotePort + ' error: ' + e);
           });
           remote.on('close', function (had_error) {
-            logger.debug("remote on close:" + had_error);
+            logger.debug('remote on close:' + had_error);
             if (had_error) {
               if (connection) {
                 connection.destroy();
@@ -155,13 +155,13 @@ exports.main = function (config) {
             }
           });
           remote.on('drain', function () {
-            logger.debug("remote on drain");
+            logger.debug('remote on drain');
             if (connection) {
               connection.resume();
             }
           });
           remote.setTimeout(15 * 1000, function () {
-            logger.debug("remote on timeout during connect()");
+            logger.debug('remote on timeout during connect()');
             if (remote) {
               remote.destroy();
             }
@@ -178,7 +178,7 @@ exports.main = function (config) {
           }
 
           stage = 4;
-          logger.debug("stage = 4");
+          logger.debug('stage = 4');
         } catch (error) {
           logger.error(error);
           connection.destroy();
@@ -192,18 +192,18 @@ exports.main = function (config) {
         }
       }
     });
-    connection.on("end", function () {
-      logger.debug("connection on end");
+    connection.on('end', function () {
+      logger.debug('connection on end');
       if (remote) {
         remote.end();
       }
     });
-    connection.on("error", function (e) {
-      logger.debug("connection on error");
-      logger.error("local error: " + e);
+    connection.on('error', function (e) {
+      logger.debug('connection on error');
+      logger.error('local error: ' + e);
     });
-    connection.on("close", function (had_error) {
-      logger.debug("connection on close:" + had_error);
+    connection.on('close', function (had_error) {
+      logger.debug('connection on close:' + had_error);
       if (had_error) {
         if (remote) {
           remote.destroy();
@@ -214,21 +214,21 @@ exports.main = function (config) {
         }
       }
 
-      logger.debug("clean");
+      logger.debug('clean');
       connections -= 1;
       remote     = null;
       connection = null;
       encryptor  = null;
-      logger.debug("connections: " + connections);
+      logger.debug('connections: ' + connections);
     });
-    connection.on("drain", function () {
-      logger.debug("connection on drain");
+    connection.on('drain', function () {
+      logger.debug('connection on drain');
       if (remote) {
         remote.resume();
       }
     });
     connection.setTimeout(timeout, function () {
-      logger.debug("connection on timeout");
+      logger.debug('connection on timeout');
       if (remote) {
         remote.destroy();
       }
@@ -243,7 +243,7 @@ exports.main = function (config) {
       process.exit(1);
     });
   });
-  server.on("close", function () {
+  server.on('close', function () {
     logger.info('server closed');
     //udpServer.close();
   });

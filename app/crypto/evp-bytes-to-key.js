@@ -3,8 +3,8 @@ var crypto  = require('crypto');
 
 var bytes_to_key_results = {};
 var EVP_BytesToKey = function (password, key_len, iv_len) {
-  if (bytes_to_key_results[password + ":" + key_len + ":" + iv_len]) {
-    return bytes_to_key_results[password + ":" + key_len + ":" + iv_len];
+  if (bytes_to_key_results[password + ':' + key_len + ':' + iv_len]) {
+    return bytes_to_key_results[password + ':' + key_len + ':' + iv_len];
   }
 
   var m     = [];
