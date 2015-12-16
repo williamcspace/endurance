@@ -16,7 +16,7 @@ Progress
 version 0.1
 
 TODO:
-- [] CLI module (bin/server, bin/client)
+- [] CLI (bin/server, bin/client)
 - [] Socks module
   - [] UDP over TCP
   - [] TCP over UDP
@@ -29,9 +29,12 @@ TODO:
   - [] Single User
   - [] Multiple User
 
-Development
+Design
 -----------
 
+- Embrace ES6, FLegacy.
+- Transport Layer (TCP/UDP)
+- Encryption Layer (SS, OpenSSL)
 
 License
 -----------------
