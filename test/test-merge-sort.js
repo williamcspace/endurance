@@ -1,2 +1,2 @@
-var mergeSort = require('../app/utils/merge_sort');
+var mergeSort = require('../app/utils/merge-sort');
 

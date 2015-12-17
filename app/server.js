@@ -10,26 +10,26 @@ const inet = require('./utils/inet');
 const Encryptor = require('./crypto/encryptor');
 const _ = require('lodash');
 
-exports.main = function main(config) {
+function main(config) {
   logger.info('Starting server...');
 
-  const address = config.server_address;
-  const port = config.server_port;
-  const key = config.password;
+  const serverAddress = config.server_address;
+  const serverPort = config.server_port;
+  const password = config.password;
   const method = config.method;
   const timeout = Math.floor(config.timeout * 1000) || 300000;
 
-  logger.info('calculating ciphers for port ' + port);
+  logger.info('calculating ciphers for port ' + serverPort);
 
   // TODO: !UDPForward
-  // const udpServer = udpRelay.createServer(address, port, null, null, key, method, timeout, false);
+  //const udpServer = udpRelay.createServer(serverAddress, serverPort, null, null, password, method, timeout, false);
 
-  const server = net.createServer().listen(port, address);
+  const server = net.createServer().listen(serverPort, serverAddress);
   server.on('listening', function onServerListening() {
     logger.info('server listening at ' + server.address().address + ':' + server.address().port);
   });
   server.on('connection', function onServerConnection(connection) {
-    let encryptor = new Encryptor(key, method);
+    let encryptor = new Encryptor(password, method);
     let stage = 0;
     let headerLength = 0;
     let remote = null;
@@ -40,9 +40,9 @@ exports.main = function main(config) {
     let connections = 1;
     logger.debug('connections: ' + connections);
 
-    connection.on('data', function onConnectionData(buffer) {
+    connection.on('data', function onConnectionData(cData) {
       logger.debug('connection on data');
-      let data = buffer;
+      let data = cData;
 
       try {
         data = encryptor.decrypt(data);
@@ -94,7 +94,7 @@ exports.main = function main(config) {
           }
           connection.pause();
 
-          remote = net.connect(remotePort, remoteAddr, function onConnect() {
+          remote = net.connect(remotePort, remoteAddr, function onRemoteConnect() {
             logger.info('connecting ' + remoteAddr + ':' + remotePort);
             if (!encryptor || !remote || !connection) {
               if (remote) {
@@ -120,7 +120,7 @@ exports.main = function main(config) {
             stage = 5;
             logger.debug('stage = 5');
           });
-          remote.on('data', function onRemoteData(buffer) {
+          remote.on('data', function onRemoteData(rData) {
             logger.debug('remote on data');
             if (!encryptor) {
               if (remote) {
@@ -128,8 +128,8 @@ exports.main = function main(config) {
               }
               return;
             }
-            const data = encryptor.encrypt(buffer);
-            if (!connection.write(data)) {
+            const encryptRData = encryptor.encrypt(rData);
+            if (!connection.write(encryptRData)) {
               remote.pause();
             }
           });
@@ -139,13 +139,13 @@ exports.main = function main(config) {
               connection.end();
             }
           });
-          remote.on('error', function onRemoteError(e) {
+          remote.on('error', function onRemoteError(rErr) {
             logger.debug('remote on error');
-            logger.error('remote ' + remoteAddr + ':' + remotePort + ' error: ' + e);
+            logger.error('remote ' + remoteAddr + ':' + remotePort + ' error: ' + rErr);
           });
-          remote.on('close', function onRemoteClose(hadError) {
-            logger.debug('remote on close:' + hadError);
-            if (hadError) {
+          remote.on('close', function onRemoteClose(rHadError) {
+            logger.debug('remote on close:' + rHadError);
+            if (rHadError) {
               if (connection) {
                 connection.destroy();
               }
@@ -241,14 +241,16 @@ exports.main = function main(config) {
       }
     });
   });
-  server.on('error', function onServerError(err) {
-    logger.error(err);
-    process.stdout.on('drain', function () {
+  server.on('error', function onServerError(sErr) {
+    logger.error(sErr);
+    process.stdout.on('drain', function onProcessDrain() {
       process.exit(1);
     });
   });
   server.on('close', function onServerClose() {
     logger.info('server closed');
-    // udpServer.close();
+    //udpServer.close();
   });
-};
+}
+
+exports.main = main;

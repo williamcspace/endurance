@@ -9,21 +9,27 @@
       "global"
     ],
     "no-unused-vars": 1,
-    "no-shadow": [0, {"builtinGlobals": false, "hoist": "functions", "allow": []}]
+    "no-unused-expressions": [
+      2,
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true
+      }
+    ]
   },
   "env": {
     "es6": true,
     "node": true,
     "mocha": true,
-    "mongo":true,
+    "mongo": true,
     "browser": false,
     "jquery": false
   },
   "ecmaFeatures": {
     "modules": false,
-    "classes":true,
-    "generators":true,
-    "blockBindings":true,
-    "arrowFunctions":true
+    "classes": true,
+    "generators": true,
+    "blockBindings": true,
+    "arrowFunctions": true
   }
 }

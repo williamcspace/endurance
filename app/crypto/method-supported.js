@@ -1,5 +1,5 @@
 'use strict';
-//module.exports = {
+// module.exports = {
 //  'aes-128-cfb': [16, 16],
 //  'aes-192-cfb': [24, 16],
 //  'aes-256-cfb': [32, 16],
@@ -14,7 +14,7 @@
 //  'rc4': [16, 0],
 //  'rc4-md5': [16, 16],
 //  'seed-cfb': [16, 16]
-//};
+// };
 
 module.exports = {
   'aes-128-cfb': [16, 16],
@@ -41,5 +41,5 @@ module.exports = {
   'idea-cfb': [16, 8],
   'rc2-cfb': [16, 8],
   'rc4': [16, 0],
-  'seed-cfb': [16, 16]
+  'seed-cfb': [16, 16],
 };

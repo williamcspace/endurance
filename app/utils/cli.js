@@ -13,42 +13,15 @@ function printServerHelp() {
   return logger.log('usage: ssserver [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
 }
 
-function loadConfig(isServerFlag) {
-  const configFromArgs = parseArgs(isServerFlag);
-  const configFile = configFromArgs.config_file || 'config.json';
-  const configPath = path.join(ROOT_PATH, configFile);
-
-  try {
-    fs.accessSync(configPath);
-  } catch (e) {
-    logger.error('[CONFIG]: ' + e.message);
-    process.exit(1);
-  }
-
-  logger.info('Loading config from ' + configPath);
-
-  try {
-    var config = JSON.parse(fs.readFileSync(configFile));
-  } catch (error) {
-    logger.error('[CONFIG]: ' + error.message);
-    process.exit(1);
-  }
-
-  var result = _.assign(config, configFromArgs);
-  verifyConfig(result);
-
-  return result;
-}
-
 function parseArgs(isServerFlag) {
-  let result = {};
-  let args = process.argv;
+  const result = {};
+  const args = process.argv;
   if (args <= 0) {
     return result;
   }
 
-  let isServer = isServerFlag || false;
-  let definition = {
+  const isServer = isServerFlag || false;
+  const DEFINITION = {
     '-l': 'local_port',
     '-p': 'server_port',
     '-s': 'server',
@@ -56,7 +29,7 @@ function parseArgs(isServerFlag) {
     '-c': 'config_file',
     '-m': 'method',
     '-b': 'local_address',
-    '-t': 'timeout'
+    '-t': 'timeout',
   };
 
   let nextIsValue = false;
@@ -65,8 +38,8 @@ function parseArgs(isServerFlag) {
     if (nextIsValue) {
       result[lastKey] = arg;
       nextIsValue = false;
-    } else if (arg in definition) {
-      lastKey = definition[arg];
+    } else if (arg in DEFINITION) {
+      lastKey = DEFINITION[arg];
       nextIsValue = true;
     } else if (arg === '-v') {
       result.verbose = true;
@@ -91,9 +64,40 @@ function verifyConfig(config) {
     logger.config(logger.level.DEBUG);
   }
 
-  if (config.method.toLowerCase() === 'rc4') {
+  if (config.method === 'rc4') {
     logger.warn('RC4 is not safe; please use a safer cipher, like AES-256-CFB');
   }
+}
+
+function loadConfig(isServerFlag) {
+  const configFromArgs = parseArgs(isServerFlag);
+  const configFile = configFromArgs.config_file || 'config.json';
+  const configPath = path.join(global.ROOT_PATH, configFile);
+
+  try {
+    fs.accessSync(configPath);
+  } catch (e) {
+    logger.error('[CONFIG]: ' + e.message);
+    process.exit(1);
+  }
+
+  logger.info('Loading config from ' + configPath);
+
+  let config;
+  try {
+    config = JSON.parse(fs.readFileSync(configFile));
+  } catch (error) {
+    logger.error('[CONFIG]: ' + error.message);
+    process.exit(1);
+  }
+
+  const result = _.assign(config, configFromArgs);
+  if (result.method) {
+    result.method = result.method.toLowerCase();
+  }
+  verifyConfig(result);
+
+  return result;
 }
 
 exports.version = pack.name + ' v' + pack.version;

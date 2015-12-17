@@ -1,7 +1,7 @@
 'use strict';
 var crypto     = require('crypto');
 var util       = require('util');
-var mergeSort = require('../utils/merge_sort');
+var mergeSort = require('../utils/merge-sort');
 var int32Max   = Math.pow(2, 32);
 
 //password: [encryptTable, decryptTable]

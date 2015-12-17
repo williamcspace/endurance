@@ -1,5 +1,5 @@
 'use strict';
-function merge(left, right, comparison) {
+function _merge(left, right, comparison) {
   const result = [];
 
   while ((left.length > 0) && (right.length > 0)) {
@@ -29,7 +29,7 @@ function mergeSort(array, comparison) {
   const middle = Math.ceil(array.length / 2);
   const left = array.slice(0, middle);
   const right = array.slice(middle);
-  return merge(mergeSort(left, comparison), mergeSort(right, comparison), comparison);
+  return _merge(mergeSort(left, comparison), mergeSort(right, comparison), comparison);
 }
 
 module.exports = mergeSort;
