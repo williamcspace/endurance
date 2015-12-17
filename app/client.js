@@ -1,21 +1,21 @@
 'use strict';
 
-var net       = require('net');
-var fs        = require('fs');
-var path      = require('path');
-var udpRelay  = require('./udprelay');
-var cli       = require('./utils/cli');
-var logger    = require('./utils/logger');
-var inet      = require('./utils/inet');
-var Encryptor = require('./crypto/encryptor');
-var _         = require('lodash');
+const net = require('net');
+const fs = require('fs');
+const path = require('path');
+const udpRelay = require('./udprelay');
+const cli = require('./utils/cli');
+const logger = require('./utils/logger');
+const inet = require('./utils/inet');
+const Encryptor = require('./crypto/encryptor');
+const _ = require('lodash');
 
-var connections = 0;
+let connections = 0;
 
-var loadConfig = function (isServerFlag) {
-  var configFromArgs = cli.parseArgs(isServerFlag);
-  var configFile     = configFromArgs.config_file || 'config.json';
-  var configPath     = path.join(ROOT_PATH, configFile);
+function loadConfig(isServerFlag) {
+  let configFromArgs = cli.parseArgs(isServerFlag);
+  let configFile = configFromArgs.config_file || 'config.json';
+  let configPath = path.join(ROOT_PATH, configFile);
 
   try {
     fs.accessSync(configPath);
@@ -34,11 +34,11 @@ var loadConfig = function (isServerFlag) {
   }
 
   return _.assign(config, configFromArgs);
-};
+}
 
-var getAddressPort = function (ip, port) {
+function getAddressPort(ip, port) {
   var aServer = ip;
-  var aPort   = port;
+  var aPort = port;
 
   if (ip instanceof Array) {
     aServer = ip[Math.floor(Math.random() * serverAddr.length)];
@@ -51,23 +51,23 @@ var getAddressPort = function (ip, port) {
   var regex = /^([^:]*)\:(\d+)$/.exec(ip);
   if (regex != null) {
     aServer = regex[1];
-    aPort   = +regex[2];
+    aPort = +regex[2];
   }
 
   return [aServer, aPort];
-};
+}
 
 exports.main = function (config) {
   logger.info('Starting client...');
 
   var serverAddress = config.server_address || '127.0.0.1';
-  var serverPort    = config.server_port || '8388';
-  var localAddress  = config.local_address || '127.0.0.1';
-  var localPort     = config.local_port || '1080';
-  var password      = config.password;
-  var method        = config.method;
-  var timeout       = Math.floor(config.timeout * 1000) || 300000;
-  var addressPort   = getAddressPort(serverAddress, serverPort);
+  var serverPort = config.server_port || '8388';
+  var localAddress = config.local_address || '127.0.0.1';
+  var localPort = config.local_port || '1080';
+  var password = config.password;
+  var method = config.method;
+  var timeout = Math.floor(config.timeout * 1000) || 300000;
+  var addressPort = getAddressPort(serverAddress, serverPort);
 
   //TODO: !UDPForward
   //var udpServer = udpRelay.createServer(localAddress, localPort, serverAddress, serverPort, password, method, timeout, true);
@@ -78,15 +78,15 @@ exports.main = function (config) {
   });
   client.on('connection', function (connection) {
     connections += 1;
-    var connected    = true;
-    var encryptor    = new Encryptor(password, method);
-    var stage        = 0;
+    var connected = true;
+    var encryptor = new Encryptor(password, method);
+    var stage = 0;
     var headerLength = 0;
-    var remote       = null;
-    var addrLen      = 0;
-    var remoteAddr   = null;
-    var remotePort   = null;
-    var addrToSend   = '';
+    var remote = null;
+    var addrLen = 0;
+    var remoteAddr = null;
+    var remotePort = null;
+    var addrToSend = '';
 
     logger.debug('connections: ' + connections);
     connection.on('data', function (data) {
@@ -110,7 +110,7 @@ exports.main = function (config) {
 
       if (stage === 1) {
         try {
-          var cmd      = data[1];
+          var cmd = data[1];
           var addrtype = data[3];
           if (cmd === 1) {
             logger.debug('cmd = 1');
@@ -119,7 +119,7 @@ exports.main = function (config) {
             var reply = new Buffer(10);
             reply.write('\u0005\u0000\u0000\u0001', 0, 4, 'binary');
             logger.debug(connection.localAddress);
-            inet.inet_aton(connection.localAddress).copy(reply, 4);
+            inet.aton(connection.localAddress).copy(reply, 4);
             reply.writeUInt16BE(connection.localPort, 8);
             connection.write(reply);
             stage = 10;
@@ -140,19 +140,19 @@ exports.main = function (config) {
 
           addrToSend = data.slice(3, 4).toString('binary');
           if (addrtype === 1) {
-            remoteAddr   = inet.inet_ntoa(data.slice(4, 8));
+            remoteAddr = inet.ntoa(data.slice(4, 8));
             addrToSend += data.slice(4, 10).toString('binary');
-            remotePort   = data.readUInt16BE(8);
+            remotePort = data.readUInt16BE(8);
             headerLength = 10;
           } else if (addrtype === 4) {
-            remoteAddr   = inet.inet_ntop(data.slice(4, 20));
+            remoteAddr = inet.ntop(data.slice(4, 20));
             addrToSend += data.slice(4, 22).toString('binary');
-            remotePort   = data.readUInt16BE(20);
+            remotePort = data.readUInt16BE(20);
             headerLength = 22;
           } else {
-            remoteAddr   = data.slice(5, 5 + addrLen).toString('binary');
+            remoteAddr = data.slice(5, 5 + addrLen).toString('binary');
             addrToSend += data.slice(4, 5 + addrLen + 2).toString('binary');
-            remotePort   = data.readUInt16BE(5 + addrLen);
+            remotePort = data.readUInt16BE(5 + addrLen);
             headerLength = 5 + addrLen + 2;
           }
           if (cmd === 3) {
@@ -236,7 +236,7 @@ exports.main = function (config) {
           });
 
           var addrToSendBuf = new Buffer(addrToSend, 'binary');
-          addrToSendBuf     = encryptor.encrypt(addrToSendBuf);
+          addrToSendBuf = encryptor.encrypt(addrToSendBuf);
           remote.setNoDelay(false);
           remote.write(addrToSendBuf);
           if (data.length > headerLength) {
@@ -257,9 +257,9 @@ exports.main = function (config) {
           }
           logger.debug('clean');
           connections -= 1;
-          remote     = null;
+          remote = null;
           connection = null;
-          encryptor  = null;
+          encryptor = null;
           logger.debug('connections: ' + connections);
           logger.debug('connections: ' + connections);
         }
@@ -303,9 +303,9 @@ exports.main = function (config) {
 
       logger.debug('clean');
       connections -= 1;
-      remote     = null;
+      remote = null;
       connection = null;
-      encryptor  = null;
+      encryptor = null;
       logger.debug('connections: ' + connections);
     });
     connection.on('drain', function () {

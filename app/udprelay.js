@@ -45,12 +45,12 @@
  */
 'use strict';
 
-var logger    = require('./utils/logger');
-var inet      = require('./utils/inet');
-var Encryptor = require('./crypto/encryptor');
-var dgram     = require('dgram');
-var net       = require('net');
-var LRUCache  = require('lru-cache');
+const logger = require('./utils/logger');
+const inet = require('./utils/inet');
+const Encryptor = require('./crypto/encryptor');
+const dgram = require('dgram');
+const net = require('net');
+const LRUCache = require('lru-cache');
 
 var encrypt = function (password, method, data) {
   try {
@@ -80,16 +80,16 @@ var parseHeader = function (data, requestHeaderOffset) {
       return null;
     }
     if (addrtype === 1) {
-      var destAddr     = inet.inet_ntoa(data.slice(requestHeaderOffset + 1, requestHeaderOffset + 5));
-      var destPort     = data.readUInt16BE(requestHeaderOffset + 5);
+      var destAddr = inet.ntoa(data.slice(requestHeaderOffset + 1, requestHeaderOffset + 5));
+      var destPort = data.readUInt16BE(requestHeaderOffset + 5);
       var headerLength = requestHeaderOffset + 7;
     } else if (addrtype === 4) {
-      destAddr     = inet.inet_ntop(data.slice(requestHeaderOffset + 1, requestHeaderOffset + 17));
-      destPort     = data.readUInt16BE(requestHeaderOffset + 17);
+      destAddr = inet.ntop(data.slice(requestHeaderOffset + 1, requestHeaderOffset + 17));
+      destPort = data.readUInt16BE(requestHeaderOffset + 17);
       headerLength = requestHeaderOffset + 19;
     } else {
-      destAddr     = data.slice(requestHeaderOffset + 2, requestHeaderOffset + 2 + addrLen).toString('binary');
-      destPort     = data.readUInt16BE(requestHeaderOffset + 2 + addrLen);
+      destAddr = data.slice(requestHeaderOffset + 2, requestHeaderOffset + 2 + addrLen).toString('binary');
+      destPort = data.readUInt16BE(requestHeaderOffset + 2 + addrLen);
       headerLength = requestHeaderOffset + 2 + addrLen + 2;
     }
     return [addrtype, destAddr, destPort, headerLength];
@@ -131,7 +131,7 @@ exports.createServer = function (listenAddr, listenPort, remoteAddr, remotePort,
 
     if (isLocal) {
       requestHeaderOffset = 3;
-      var frag            = msg[2];
+      var frag = msg[2];
       if (frag !== 0) {
         logger.debug('frag:' + frag);
         logger.warn('drop a message since frag is not 0');
@@ -149,9 +149,9 @@ exports.createServer = function (listenAddr, listenPort, remoteAddr, remotePort,
       return;
     }
 
-    var addrtype     = headerResult[0];
-    var destAddr     = headerResult[1];
-    var destPort     = headerResult[2];
+    var addrtype = headerResult[0];
+    var destAddr = headerResult[1];
+    var destPort = headerResult[2];
     var headerLength = headerResult[3];
 
     var sendDataOffset;
@@ -159,15 +159,15 @@ exports.createServer = function (listenAddr, listenPort, remoteAddr, remotePort,
     var serverPort;
     if (isLocal) {
       sendDataOffset = requestHeaderOffset;
-      serverAddr     = remoteAddr;
-      serverPort     = remotePort;
+      serverAddr = remoteAddr;
+      serverPort = remotePort;
     } else {
       sendDataOffset = headerLength;
-      serverAddr     = destAddr;
-      serverPort     = destPort;
+      serverAddr = destAddr;
+      serverPort = destPort;
     }
 
-    var key    = getClientKey(rinfo.address, rinfo.port, destAddr, destPort);
+    var key = getClientKey(rinfo.address, rinfo.port, destAddr, destPort);
     var client = clients.get(key);
 
     if (client == null) {
@@ -178,19 +178,19 @@ exports.createServer = function (listenAddr, listenPort, remoteAddr, remotePort,
       client.on('message', function (data1, rinfo1) {
         if (!isLocal) {
           logger.debug('UDP recv from ' + rinfo1.address + ':' + rinfo1.port);
-          var serverIPBuf    = inet.inet_aton(rinfo1.address);
+          var serverIPBuf = inet.aton(rinfo1.address);
           var responseHeader = new Buffer(7);
           responseHeader.write('\x01', 0);
           serverIPBuf.copy(responseHeader, 1, 0, 4);
           responseHeader.writeUInt16BE(rinfo1.port, 5);
           var data2 = Buffer.concat([responseHeader, data1]);
-          data2     = encrypt(password, method, data2);
+          data2 = encrypt(password, method, data2);
           if (data2 == null) {
             return;
           }
         } else {
           responseHeader = new Buffer('\x00\x00\x00');
-          data1          = decrypt(password, method, data1);
+          data1 = decrypt(password, method, data1);
           if (data1 == null) {
             return;
           }
@@ -199,9 +199,9 @@ exports.createServer = function (listenAddr, listenPort, remoteAddr, remotePort,
             return;
           }
 
-          var addrtype     = headerResult[0];
-          var destAddr     = headerResult[1];
-          var destPort     = headerResult[2];
+          var addrtype = headerResult[0];
+          var destAddr = headerResult[1];
+          var destPort = headerResult[2];
           var headerLength = headerResult[3];
 
           logger.debug('UDP recv from ' + destAddr + ':' + destPort);

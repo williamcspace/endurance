@@ -1,0 +1,29 @@
+{
+  "extends": "airbnb",
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "strict": [
+      2,
+      "global"
+    ],
+    "no-unused-vars": 1,
+    "no-shadow": [0, {"builtinGlobals": false, "hoist": "functions", "allow": []}]
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true,
+    "mongo":true,
+    "browser": false,
+    "jquery": false
+  },
+  "ecmaFeatures": {
+    "modules": false,
+    "classes":true,
+    "generators":true,
+    "blockBindings":true,
+    "arrowFunctions":true
+  }
+}

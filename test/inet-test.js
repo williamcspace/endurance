@@ -11,33 +11,33 @@ IPBuff[1] = '0';
 IPBuff[2] = '0';
 IPBuff[3] = '1';
 
-describe('inet:inet_aton', function() {
+describe('inet:aton', function() {
   it('should convert IPv4 address to network address', function() {
-    var result = inet.inet_aton(IPString);
+    var result = inet.aton(IPString);
     console.log(result);
     util.debug(result);
     result.should.be.deep.equal(IPBuff);
   });
 });
 
-describe('inet:inet_ntoa', function() {
+describe('inet:ntoa', function() {
   it('should convert network address to IPv4 address', function() {
-    var result = inet.inet_ntoa(IPBuff);
+    var result = inet.ntoa(IPBuff);
     result.should.be.equal(IPString);
   });
 });
 
-describe('inet:inet_ntop', function() {
+describe('inet:ntop', function() {
   it('should convert internet address to pack address', function() {
-    var result = inet.inet_ntop(IPBuff);
+    var result = inet.ntop(IPBuff);
     result.should.be.equal(IPString);
   });
 });
 
-describe('inet:inet_pton', function() {
+describe('inet:pton', function() {
   it('should convert pack address to internet address', function() {
-    var result1 = inet.inet_pton(IPString);
-    var result2 = inet.inet_ntop(result1);
+    var result1 = inet.pton(IPString);
+    var result2 = inet.ntop(result1);
     result2.should.be.equal(IPString);
   });
 });

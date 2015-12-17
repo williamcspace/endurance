@@ -1,37 +1,35 @@
 'use strict';
-
-exports.inet_aton = function inet_aton(ipStr) {
-  var parts = ipStr.split('.');
+function aton(ipStr) {
+  const parts = ipStr.split('.');
   if (parts.length !== 4) {
     return null;
-  } else {
-    var buf = new Buffer(4);
-    var i   = 0;
-    while (i < 4) {
-      buf[i] = +parts[i];
-      i++;
-    }
-    return buf;
   }
-};
 
-exports.inet_ntoa = function inet_ntoa(buf) {
+  const buf = new Buffer(4);
+  for (let i = 0; i < 4; i++) {
+    buf[i] = Number(parts[i]);
+  }
+
+  return buf;
+}
+
+function ntoa(buf) {
   return buf[0] + '.' + buf[1] + '.' + buf[2] + '.' + buf[3];
-};
+}
 
-//Converts a packed internet address to a human readable representation
-//string inet_ntop ( string $in_addr )
-exports.inet_ntop = function inet_ntop(a) {
+// Converts a packed internet address to a human readable representation
+// string ntop ( string $in_addr )
+function ntop(a) {
   //  discuss at: http://phpjs.org/functions/inet_ntop/
   // original by: Theriault
-  //   example 1: inet_ntop('\x7F\x00\x00\x01');
+  //   example 1: ntop('\x7F\x00\x00\x01');
   //   returns 1: '127.0.0.1'
-  //   example 2: inet_ntop('\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1');
+  //   example 2: ntop('\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1');
   //   returns 2: '::1'
 
   var i = 0,
-      m = '',
-      c = [];
+    m = '',
+    c = [];
   a += '';
   if (a.length === 4) {
     // IPv4
@@ -45,7 +43,7 @@ exports.inet_ntop = function inet_ntop(a) {
         .toString(16));
     }
     return c.join(':')
-      .replace(/((^|:)0(?=:|$))+:?/g, function(t) {
+      .replace(/((^|:)0(?=:|$))+:?/g, function (t) {
         m = (t.length > m.length) ? t : m;
         return t;
       })
@@ -54,16 +52,16 @@ exports.inet_ntop = function inet_ntop(a) {
     // Invalid length
     return false;
   }
-};
+}
 
-//Converts a human readable IP address to its packed in_addr representation
-//string inet_pton ( string $address )
-exports.inet_pton = function (a) {
+// Converts a human readable IP address to its packed in_addr representation
+// string pton ( string $address )
+function pton(a) {
   //  discuss at: http://phpjs.org/functions/inet_pton/
   // original by: Theriault
-  //   example 1: inet_pton('::');
+  //   example 1: pton('::');
   //   returns 1: '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0'
-  //   example 2: inet_pton('127.0.0.1');
+  //   example 2: pton('127.0.0.1');
   //   returns 2: '\x7F\x00\x00\x01'
 
   var r, m, x, i, j, f = String.fromCharCode;
@@ -107,4 +105,9 @@ exports.inet_pton = function (a) {
   }
   // Invalid IP.
   return false;
-};
+}
+
+exports.aton = aton;
+exports.ntoa = ntoa;
+exports.ntop = ntop;
+exports.pton = pton;

@@ -1,3 +1,5 @@
+'use strict';
+
 // we clear at most TIMEOUTS_CLEAN_SIZE timeouts each time
 const TIMEOUTS_CLEAN_SIZE = 512;
 const MSG_FASTOPEN = 0x20000000;

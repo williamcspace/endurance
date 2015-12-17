@@ -1,42 +1,22 @@
 'use strict';
+const pack = require('../../package.json');
+const logger = require('./logger');
+const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
 
-var pack   = require('../../package.json');
-var logger = require('./logger');
-var _      = require('lodash');
-var fs     = require('fs');
-var path   = require('path');
+function printLocalHelp() {
+  return logger.log('usage: sslocal [-h] -s SERVER_ADDR -p SERVER_PORT [-b LOCAL_ADDR] -l LOCAL_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -b LOCAL_ADDR         local binding address, default is 127.0.0.1\n  -l LOCAL_PORT         local port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
+}
 
-var printLocalHelp = function () {
-  return console.log('usage: sslocal [-h] -s SERVER_ADDR -p SERVER_PORT [-b LOCAL_ADDR] -l LOCAL_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -b LOCAL_ADDR         local binding address, default is 127.0.0.1\n  -l LOCAL_PORT         local port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
-};
+function printServerHelp() {
+  return logger.log('usage: ssserver [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
+}
 
-var printServerHelp = function () {
-  return console.log('usage: ssserver [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
-};
-
-var dumpLog = function () {
-  setInterval(function () {
-    logger.debug(JSON.stringify(process.memoryUsage(), ' ', 2));
-    if (global.gc) {
-      logger.debug('GC');
-      gc();
-      logger.debug(JSON.stringify(process.memoryUsage(), ' ', 2));
-      var cwd = process.cwd();
-      try {
-        var heapdump = require('heapdump');
-        process.chdir('/tmp');
-        return process.chdir(cwd);
-      } catch (error) {
-        return logger.debug(error);
-      }
-    }
-  }, 1000);
-};
-
-var loadConfig = function (isServerFlag) {
-  var configFromArgs = parseArgs(isServerFlag);
-  var configFile     = configFromArgs.config_file || 'config.json';
-  var configPath     = path.join(ROOT_PATH, configFile);
+function loadConfig(isServerFlag) {
+  const configFromArgs = parseArgs(isServerFlag);
+  const configFile = configFromArgs.config_file || 'config.json';
+  const configPath = path.join(ROOT_PATH, configFile);
 
   try {
     fs.accessSync(configPath);
@@ -58,17 +38,17 @@ var loadConfig = function (isServerFlag) {
   verifyConfig(result);
 
   return result;
-};
+}
 
-var parseArgs = function (isServerFlag) {
-  var result = {};
-  var args   = process.argv;
+function parseArgs(isServerFlag) {
+  let result = {};
+  let args = process.argv;
   if (args <= 0) {
     return result;
   }
 
-  var isServer    = isServerFlag || false;
-  var definition  = {
+  let isServer = isServerFlag || false;
+  let definition = {
     '-l': 'local_port',
     '-p': 'server_port',
     '-s': 'server',
@@ -79,27 +59,27 @@ var parseArgs = function (isServerFlag) {
     '-t': 'timeout'
   };
 
-  var nextIsValue = false;
-  var lastKey     = null;
-  _.each(args, function (arg) {
+  let nextIsValue = false;
+  let lastKey = null;
+  _.each(args, function toJson(arg) {
     if (nextIsValue) {
       result[lastKey] = arg;
-      nextIsValue     = false;
+      nextIsValue = false;
     } else if (arg in definition) {
-      lastKey     = definition[arg];
+      lastKey = definition[arg];
       nextIsValue = true;
-    } else if ('-v' === arg) {
-      result['verbose'] = true;
+    } else if (arg === '-v') {
+      result.verbose = true;
     } else if (arg.indexOf('-') === 0) {
-      (isServer) ? printServerHelp() : printLocalHelp();
+      isServer ? printServerHelp() : printLocalHelp();
       process.exit(2);
     }
   });
 
   return result;
-};
+}
 
-var verifyConfig = function (config) {
+function verifyConfig(config) {
   logger.info('Verifying Config File...');
 
   if (!(config.server_address && config.server_port && config.password && config.method)) {
@@ -114,9 +94,9 @@ var verifyConfig = function (config) {
   if (config.method.toLowerCase() === 'rc4') {
     logger.warn('RC4 is not safe; please use a safer cipher, like AES-256-CFB');
   }
-};
+}
 
-exports.version      = pack.name + ' v' + pack.version;
-exports.loadConfig   = loadConfig;
-exports.parseArgs    = parseArgs;
+exports.version = pack.name + ' v' + pack.version;
+exports.loadConfig = loadConfig;
+exports.parseArgs = parseArgs;
 exports.verifyConfig = verifyConfig;

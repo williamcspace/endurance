@@ -1,27 +1,36 @@
-var winston = require('winston');
-var logger = new (winston.Logger)({
+'use strict';
+const winston = require('winston');
+const util = require('util');
+const logger = new (winston.Logger)({
   transports: [
     new winston.transports.Console({
-      level:'info',
-      silent:false,
+      level: 'info',
+      silent: false,
       colorize: true,
       timestamp: false,
-      json:false,
-      stringify:false,
+      json: false,
+      stringify: false,
       prettyPrint: false,
-      depth:null,
+      depth: null,
       handleExceptions: false,
-      humanReadableUnhandledException:false,
+      humanReadableUnhandledException: false,
       showLevel: true,
       formatter: undefined,
-      stderrLevels: ['error', 'debug']
-    })
-  ]
+      stderrLevels: ['error', 'debug'],
+    }),
+  ],
 });
 
-exports.level = { ERROR: 0, WARN: 1, INFO: 2, VERBOSE: 3, DEBUG: 4, SILLY: 5 };
+const LOG_LEVEL = {
+  ERROR: 0,
+  WARN: 1,
+  INFO: 2,
+  VERBOSE: 3,
+  DEBUG: 4,
+  SILLY: 5,
+};
 
-exports.config = function (level) {
+function config(level) {
   switch (level) {
     case 0:
       logger.level = 'error';
@@ -45,32 +54,42 @@ exports.config = function (level) {
       logger.level = 'debug';
       break;
   }
-};
+}
 
-exports.log = function (err) {
-  console.log(err);
-};
+function log(err) {
+  util.log(err);
+}
 
-exports.error = function (err) {
+function error(err) {
   logger.error(err);
-};
+}
 
-exports.warn = function (err) {
+function warn(err) {
   logger.warn(err);
-};
+}
 
-exports.info = function (err) {
+function info(err) {
   logger.info(err);
-};
+}
 
-exports.verbose = function (err) {
+function verbose(err) {
   logger.verbose(err);
-};
+}
 
-exports.debug = function (err) {
+function debug(err) {
   logger.debug(err);
-};
+}
 
-exports.silly = function (err) {
+function silly(err) {
   logger.debug(err);
-};
+}
+
+exports.level = LOG_LEVEL;
+exports.config = config;
+exports.log = log;
+exports.error = error;
+exports.warn = warn;
+exports.info = info;
+exports.verbose = verbose;
+exports.debug = debug;
+exports.silly = silly;
