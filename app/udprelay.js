@@ -219,6 +219,8 @@ const createServer = (listenAddr, listenPort, remoteAddr, remotePort, password, 
 
         server.send(data2, 0, data2.length, rinfo.port, rinfo.address, (err, bytes) => {
           logger.debug('remote to local sent');
+          logger.debug('err: ' + err);
+          logger.debug('bytes: ' + bytes);
         });
       });
       client.on('error', (err) => {
@@ -245,7 +247,8 @@ const createServer = (listenAddr, listenPort, remoteAddr, remotePort, password, 
     logger.debug('UDP send to ' + destAddr + ':' + destPort);
     client.send(dataToSend, 0, dataToSend.length, serverPort, serverAddr, (err, bytes) => {
       logger.debug('local to remote sent');
-      logger.error('err: ' + err);
+      logger.debug('err: ' + err);
+      logger.debug('bytes: ' + bytes);
     });
   });
   server.on('listening', () => {

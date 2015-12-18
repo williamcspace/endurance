@@ -40,7 +40,7 @@ Branch
 -----------
 
 - master: release branch
-- develop: vanilla javascript (ES6 with babel-to-ES5)
+- develop: vanilla javascript (ES6)
 - develop-typescript: experiment with typescript
 
 

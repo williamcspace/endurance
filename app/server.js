@@ -241,8 +241,8 @@ const main = (config) => {
       }
     });
   });
-  server.on('error', (sErr) => {
-    logger.error(sErr);
+  server.on('error', (err) => {
+    logger.error(err);
     process.stdout.on('drain', () => {
       process.exit(1);
     });
