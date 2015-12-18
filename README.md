@@ -36,6 +36,14 @@ Design
 - Transport Layer (TCP/UDP)
 - Encryption Layer (SS, OpenSSL)
 
+Branch
+-----------
+
+- master: release branch
+- develop: vanilla javascript (ES6 with babel-to-ES5)
+- develop-typescript: experiment with typescript
+
+
 License
 -----------------
 MIT
