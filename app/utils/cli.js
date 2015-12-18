@@ -5,15 +5,15 @@ const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 
-function printLocalHelp() {
+const printLocalHelp = () => {
   return logger.log('usage: sslocal [-h] -s SERVER_ADDR -p SERVER_PORT [-b LOCAL_ADDR] -l LOCAL_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -b LOCAL_ADDR         local binding address, default is 127.0.0.1\n  -l LOCAL_PORT         local port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
-}
+};
 
-function printServerHelp() {
+const printServerHelp = () => {
   return logger.log('usage: ssserver [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
-}
+};
 
-function parseArgs(isServerFlag) {
+const parseArgs = (isServerFlag) => {
   const result = {};
   const args = process.argv;
   if (args <= 0) {
@@ -34,7 +34,7 @@ function parseArgs(isServerFlag) {
 
   let nextIsValue = false;
   let lastKey = null;
-  _.each(args, function toJson(arg) {
+  _.each(args, (arg) => {
     if (nextIsValue) {
       result[lastKey] = arg;
       nextIsValue = false;
@@ -50,9 +50,9 @@ function parseArgs(isServerFlag) {
   });
 
   return result;
-}
+};
 
-function verifyConfig(config) {
+const verifyConfig = (config) => {
   logger.info('Verifying Config File...');
 
   if (!(config.server_address && config.server_port && config.password && config.method)) {
@@ -67,9 +67,9 @@ function verifyConfig(config) {
   if (config.method === 'rc4') {
     logger.warn('RC4 is not safe; please use a safer cipher, like AES-256-CFB');
   }
-}
+};
 
-function loadConfig(isServerFlag) {
+const loadConfig = (isServerFlag) => {
   const configFromArgs = parseArgs(isServerFlag);
   const configFile = configFromArgs.config_file || 'config.json';
   const configPath = path.join(global.ROOT_PATH, configFile);
@@ -98,7 +98,7 @@ function loadConfig(isServerFlag) {
   verifyConfig(result);
 
   return result;
-}
+};
 
 exports.version = pack.name + ' v' + pack.version;
 exports.loadConfig = loadConfig;

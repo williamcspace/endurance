@@ -2,7 +2,8 @@
 const crypto = require('crypto');
 
 const results = {};
-function EVPBytesToKey(password, keyLen, ivLen) {
+
+const EVPBytesToKey = (password, keyLen, ivLen) => {
   if (results[password + ':' + keyLen + ':' + ivLen]) {
     return results[password + ':' + keyLen + ':' + ivLen];
   }
@@ -24,6 +25,6 @@ function EVPBytesToKey(password, keyLen, ivLen) {
   const iv = ms.slice(keyLen, keyLen + ivLen);
   results[password] = [key, iv];
   return [key, iv];
-}
+};
 
 module.exports = EVPBytesToKey;

@@ -30,7 +30,7 @@ const LOG_LEVEL = {
   SILLY: 5,
 };
 
-function config(level) {
+const config = (level) => {
   switch (level) {
     case 0:
       logger.level = 'error';
@@ -54,35 +54,35 @@ function config(level) {
       logger.level = 'debug';
       break;
   }
-}
+};
 
-function log(err) {
+const log = (err) => {
   util.log(err);
-}
+};
 
-function error(err) {
+const error = (err) => {
   logger.error(err);
-}
+};
 
-function warn(err) {
+const warn = (err) => {
   logger.warn(err);
-}
+};
 
-function info(err) {
+const info = (err) => {
   logger.info(err);
-}
+};
 
-function verbose(err) {
+const verbose = (err) => {
   logger.verbose(err);
-}
+};
 
-function debug(err) {
+const debug = (err) => {
   logger.debug(err);
-}
+};
 
-function silly(err) {
+const silly = (err) => {
   logger.debug(err);
-}
+};
 
 exports.level = LOG_LEVEL;
 exports.config = config;

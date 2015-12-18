@@ -8,15 +8,17 @@
       2,
       "global"
     ],
+    "no-shadow":0,
     "no-unused-vars": 1,
     "no-unused-expressions": [
-      2,
+      1,
       {
         "allowShortCircuit": true,
         "allowTernary": true
       }
     ],
-    "spaced-comment": [0, "always"]
+    "spaced-comment": 0,
+    "func-names":0
   },
   "env": {
     "es6": true,

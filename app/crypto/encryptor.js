@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const evpBytesToKey = require('./evp-bytes-to-key');
 const METHOD_SUPPORTED = require('./method-supported');
 
-function verifyMethod(method) {
+const verifyMethod = (method) => {
   if (!method) {
     throw new Error('method cannot be null!');
   }
@@ -20,7 +20,7 @@ function verifyMethod(method) {
   if (!METHOD_SUPPORTED[method]) {
     throw new Error('method `' + method + '` is not supported');
   }
-}
+};
 
 class Encryptor {
   constructor(key, method) {

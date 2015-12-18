@@ -7,7 +7,7 @@ const int32Max = Math.pow(2, 32);
 //password: [encryptTable, decryptTable]
 const cachedTables = {};
 
-const getTable = function getTable(key) {
+const getTable = (key) => {
   if (cachedTables[key]) {
     return cachedTables[key];
   }
@@ -27,7 +27,7 @@ const getTable = function getTable(key) {
 
   //TODO 想想怎么把callback拿出来
   for (let i = 1; i < 1024; i++) {
-    table = mergeSort(table, function comparison(x, y) {  //eslint-disable-line no-loop-func
+    table = mergeSort(table, (x, y) => { //eslint-disable-line no-loop-func
       return ((ah % (x + i)) * int32Max + al) % (x + i) - ((ah % (y + i)) * int32Max + al) % (y + i);
     });
   }

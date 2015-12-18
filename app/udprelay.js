@@ -52,7 +52,7 @@ const dgram = require('dgram');
 const net = require('net');
 const LRUCache = require('lru-cache');
 
-const encrypt = function (password, method, data) {
+const encrypt = (password, method, data) => {
   try {
     return Encryptor.encryptAll(password, method, 1, data);
   } catch (error) {
@@ -61,7 +61,7 @@ const encrypt = function (password, method, data) {
   }
 };
 
-const decrypt = function decrypt(password, method, data) {
+const decrypt = (password, method, data) => {
   try {
     return Encryptor.encryptAll(password, method, 0, data);
   } catch (error) {
@@ -70,7 +70,7 @@ const decrypt = function decrypt(password, method, data) {
   }
 };
 
-const parseHeader = function parseHeader(data, requestHeaderOffset) {
+const parseHeader = (data, requestHeaderOffset) => {
   try {
     const addrtype = data[requestHeaderOffset];
 
@@ -106,11 +106,11 @@ const parseHeader = function parseHeader(data, requestHeaderOffset) {
   }
 };
 
-const getClientKey = function getClientKey(localAddr, localPort, destAddr, destPort) {
+const getClientKey = (localAddr, localPort, destAddr, destPort) => {
   return localAddr + ':' + localPort + ':' + destAddr + ':' + destPort;
 };
 
-const getUDPTypeByIP = function getUDPTypeByIP(ip) {
+const getUDPTypeByIP = (ip) => {
   if (net.isIPv4(ip)) {
     return 'udp4';
   }
@@ -122,18 +122,18 @@ const getUDPTypeByIP = function getUDPTypeByIP(ip) {
   throw new Error('UDP address is invalid');
 };
 
-function createServer(listenAddr, listenPort, remoteAddr, remotePort, password, method, timeout, isLocal) {
+const createServer = (listenAddr, listenPort, remoteAddr, remotePort, password, method, timeout, isLocal) => {
   const udpType = getUDPTypeByIP(listenAddr);
   const clients = new LRUCache({
     max: 500,
     maxAge: timeout,
-    dispose: function onDispose(key, value) {
+    dispose: (key, value) => {
       value.close();
     },
   });
 
   const server = dgram.createSocket(udpType);
-  server.on('message', function onServerMessage(message, rinfo) {
+  server.on('message', (message, rinfo) => {
     let requestHeaderOffset = 0;
 
     let msg = message;
@@ -181,7 +181,7 @@ function createServer(listenAddr, listenPort, remoteAddr, remotePort, password, 
     if (!client) {
       const clientUdpType = getUDPTypeByIP(serverAddr);
       client = dgram.createSocket(clientUdpType);
-      client.on('message', function onClientMessage(data1, rinfo1) {
+      client.on('message', (data1, rinfo1) => {
         const serverIPBuf = inet.aton(rinfo1.address);
         let responseHeader = new Buffer(7);
         let data2 = data1;
@@ -217,15 +217,15 @@ function createServer(listenAddr, listenPort, remoteAddr, remotePort, password, 
         logger.debug('UDP recv from ' + cDestAddr + ':' + cDestPort);
         data2 = Buffer.concat([responseHeader, data2]);
 
-        server.send(data2, 0, data2.length, rinfo.port, rinfo.address, function onRemoteToLocal(err, bytes) {
+        server.send(data2, 0, data2.length, rinfo.port, rinfo.address, (err, bytes) => {
           logger.debug('remote to local sent');
         });
       });
-      client.on('error', function onClientError(err) {
+      client.on('error', (err) => {
         logger.error('UDP client error: ' + err);
         client.close();
       });
-      client.on('close', function onClientClose() {
+      client.on('close', () => {
         logger.debug('UDP client close');
         clients.del(key);
       });
@@ -243,24 +243,24 @@ function createServer(listenAddr, listenPort, remoteAddr, remotePort, password, 
     }
 
     logger.debug('UDP send to ' + destAddr + ':' + destPort);
-    client.send(dataToSend, 0, dataToSend.length, serverPort, serverAddr, function onClientSend(err, bytes) {
+    client.send(dataToSend, 0, dataToSend.length, serverPort, serverAddr, (err, bytes) => {
       logger.debug('local to remote sent');
       logger.error('err: ' + err);
     });
   });
-  server.on('listening', function onServerListening() {
+  server.on('listening', () => {
     logger.info('UDP server listening to ' + server.address().address + ':' + server.address().port);
   });
-  server.on('error', function onError(err) {
+  server.on('error', (err) => {
     logger.error(err);
     server.close();
   });
-  server.on('close', function onClose() {
+  server.on('close', () => {
     logger.info('UDP server closing');
     clients.reset();
   });
   server.bind(listenPort, listenAddr);
   return server;
-}
+};
 
 exports.createServer = createServer;

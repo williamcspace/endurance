@@ -10,7 +10,7 @@ const inet = require('./utils/inet');
 const Encryptor = require('./crypto/encryptor');
 const _ = require('lodash');
 
-function getAddressPort(ip, port) {
+const getAddressPort = (ip, port) => {
   let aServer = ip;
   let aPort = port;
 
@@ -29,9 +29,9 @@ function getAddressPort(ip, port) {
   }
 
   return [aServer, aPort];
-}
+};
 
-function main(config) {
+const main = (config) => {
   logger.info('Starting client...');
 
   const serverAddress = config.server_address || '127.0.0.1';
@@ -48,10 +48,10 @@ function main(config) {
 
   let connections = 0;
   const client = net.createServer().listen(localPort, localAddress);
-  client.on('listening', function onClientListening() {
+  client.on('listening', () => {
     logger.info('local listening at ' + client.address().address + ':' + client.address().port);
   });
-  client.on('connection', function onClientConnection(connection) {
+  client.on('connection', (connection) => {
     let connected = true;
     let encryptor = new Encryptor(password, method);
     let stage = 0;
@@ -64,11 +64,11 @@ function main(config) {
 
     connections += 1;
     logger.debug('connections: ' + connections);
-    connection.on('data', function oneConnectionData(cData) {
+    connection.on('data', (buffer) => {
       logger.debug('connection on data');
-      let data = cData;
+      let data = buffer;
       if (stage === 5) {
-        data = encryptor.encrypt(cData);
+        data = encryptor.encrypt(data);
         if (!remote.write(data)) {
           connection.pause();
         }
@@ -141,23 +141,23 @@ function main(config) {
           connection.write(buf);
 
           logger.info('connecting ' + addressPort[0] + ':' + addressPort[1]);
-          remote = net.connect(addressPort[1], addressPort[0], function onRemoteConnect() {
+          remote = net.connect(addressPort[1], addressPort[0], () => {
             if (remote) {
               remote.setNoDelay(true);
             }
             stage = 5;
             logger.debug('stage = 5');
           });
-          remote.on('data', function onRemoteData(rData) {
+          remote.on('data', (buffer) => {
             if (!connected) {
               return;
             }
             logger.debug('remote on data');
 
             try {
-              let decryptRData = rData;
+              let decryptRData = buffer;
               if (encryptor) {
-                decryptRData = encryptor.decrypt(rData);
+                decryptRData = encryptor.decrypt(buffer);
                 if (!connection.write(decryptRData)) {
                   remote.pause();
                 }
@@ -174,19 +174,19 @@ function main(config) {
               }
             }
           });
-          remote.on('end', function onRemoteEnd() {
+          remote.on('end', () => {
             logger.debug('remote on end');
             if (connection) {
               connection.end();
             }
           });
-          remote.on('error', function onRemoteError(Err) {
+          remote.on('error', (err) => {
             logger.debug('remote on error');
-            logger.error('remote ' + remoteAddr + ':' + remotePort + ' error: ' + Err);
+            logger.error('remote ' + remoteAddr + ':' + remotePort + ' error: ' + err);
           });
-          remote.on('close', function onRemoteClose(rHadError) {
-            logger.debug('remote on close:' + rHadError);
-            if (rHadError) {
+          remote.on('close', (hadErr) => {
+            logger.debug('remote on close:' + hadErr);
+            if (hadErr) {
               if (connection) {
                 connection.destroy();
               }
@@ -196,13 +196,13 @@ function main(config) {
               }
             }
           });
-          remote.on('drain', function onRemoteDrain() {
+          remote.on('drain', () => {
             logger.debug('remote on drain');
             if (connection) {
               connection.resume();
             }
           });
-          remote.setTimeout(timeout, function onRemoteTimeout() {
+          remote.setTimeout(timeout, () => {
             logger.debug('remote on timeout');
             if (remote) {
               remote.destroy();
@@ -251,21 +251,21 @@ function main(config) {
         }
       }
     });
-    connection.on('end', function oneConnectionEnd() {
+    connection.on('end', () => {
       connected = false;
       logger.debug('connection on end');
       if (remote) {
         remote.end();
       }
     });
-    connection.on('error', function onConnectionError(cErr) {
+    connection.on('error', (err) => {
       logger.debug('connection on error');
-      logger.error('local error: ' + cErr);
+      logger.error('local error: ' + err);
     });
-    connection.on('close', function onConnectionClose(cHadError) {
+    connection.on('close', (hadErr) => {
       connected = false;
-      logger.debug('connection on close:' + cHadError);
-      if (cHadError) {
+      logger.debug('connection on close:' + hadErr);
+      if (hadErr) {
         if (remote) {
           remote.destroy();
         }
@@ -286,13 +286,13 @@ function main(config) {
       encryptor = null;
       logger.debug('connections: ' + connections);
     });
-    connection.on('drain', function onConnectionDrain() {
+    connection.on('drain', () => {
       logger.debug('connection on drain');
       if (remote && stage === 5) {
         remote.resume();
       }
     });
-    connection.setTimeout(timeout, function onConnectionTimeout() {
+    connection.setTimeout(timeout, () => {
       logger.debug('connection on timeout');
       if (remote) {
         remote.destroy();
@@ -302,16 +302,16 @@ function main(config) {
       }
     });
   });
-  client.on('error', function onClientError(cErr) {
-    logger.error(cErr);
-    process.stdout.on('drain', function onProcessDrain() {
+  client.on('error', (err) => {
+    logger.error(err);
+    process.stdout.on('drain', () => {
       process.exit(1);
     });
   });
-  client.on('close', function onClientclose() {
+  client.on('close', () => {
     logger.info('client closed');
     //udpClient.close();
   });
-}
+};
 
 exports.main = main;

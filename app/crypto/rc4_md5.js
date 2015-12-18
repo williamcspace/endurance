@@ -1,7 +1,7 @@
 'use strict';
 const crypto = require('crypto');
 
-function createCipher(key, iv, op) {
+const createCipher = (key, iv, op) => {
   const md5 = crypto.createHash('md5');
   md5.update(key);
   md5.update(iv);
@@ -11,6 +11,6 @@ function createCipher(key, iv, op) {
   }
 
   return crypto.createDecipheriv('rc4', rc4Key, '');
-}
+};
 
 exports.createCipher = createCipher;
