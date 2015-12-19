@@ -7,7 +7,7 @@ const path = require('path');
 
 const printLocalHelp = () => {
   return logger.log(`\
-usage: sslocal [-h] -s SERVER_ADDR -p SERVER_PORT [-b LOCAL_ADDR] -l LOCAL_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]
+usage: client [-h] -s SERVER_ADDR -p SERVER_PORT [-b LOCAL_ADDR] -l LOCAL_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -24,7 +24,7 @@ optional arguments:
 
 const printServerHelp = () => {
   return logger.log(`\
-usage: ssserver [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]
+usage: server [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]
 
 optional arguments:
   -h, --help            show this help message and exit
