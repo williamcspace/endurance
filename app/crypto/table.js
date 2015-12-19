@@ -27,7 +27,7 @@ const getTable = (key) => {
 
   //TODO 想想怎么把callback拿出来
   for (let i = 1; i < 1024; i++) {
-    table = mergeSort(table, (x, y) => { //eslint-disable-line no-loop-func
+    table = mergeSort(table, (x, y) => {
       return ((ah % (x + i)) * int32Max + al) % (x + i) - ((ah % (y + i)) * int32Max + al) % (y + i);
     });
   }
