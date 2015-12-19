@@ -57,7 +57,7 @@ const config = (level) => {
 };
 
 const log = (err) => {
-  util.log(err);
+  console.log(err);
 };
 
 const error = (err) => {

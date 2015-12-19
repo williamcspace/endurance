@@ -19,7 +19,8 @@
     ],
     "spaced-comment": 0,
     "func-names": 0,
-    "no-loop-func": 0
+    "no-loop-func": 0,
+    "no-console": 0
   },
   "env": {
     "es6": true,

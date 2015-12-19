@@ -6,11 +6,35 @@ const fs = require('fs');
 const path = require('path');
 
 const printLocalHelp = () => {
-  return logger.log('usage: sslocal [-h] -s SERVER_ADDR -p SERVER_PORT [-b LOCAL_ADDR] -l LOCAL_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -b LOCAL_ADDR         local binding address, default is 127.0.0.1\n  -l LOCAL_PORT         local port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
+  return logger.log(`\
+usage: sslocal [-h] -s SERVER_ADDR -p SERVER_PORT [-b LOCAL_ADDR] -l LOCAL_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SERVER_ADDR        server address
+  -p SERVER_PORT        server port
+  -b LOCAL_ADDR         local binding address, default is 127.0.0.1
+  -l LOCAL_PORT         local port
+  -k PASSWORD           password
+  -m METHOD             encryption method, for example, aes-256-cfb
+  -t TIMEOUT            timeout in seconds
+  -c CONFIG             path to config file\
+`);
 };
 
 const printServerHelp = () => {
-  return logger.log('usage: ssserver [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -s SERVER_ADDR        server address\n  -p SERVER_PORT        server port\n  -k PASSWORD           password\n  -m METHOD             encryption method, for example, aes-256-cfb\n  -t TIMEOUT            timeout in seconds\n  -c CONFIG             path to config file');
+  return logger.log(`\
+usage: ssserver [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SERVER_ADDR        server address
+  -p SERVER_PORT        server port
+  -k PASSWORD           password
+  -m METHOD             encryption method, for example, aes-256-cfb
+  -t TIMEOUT            timeout in seconds
+  -c CONFIG             path to config file\
+`);
 };
 
 const parseArgs = (isServerFlag) => {
