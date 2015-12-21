@@ -1,6 +1,5 @@
 'use strict';
 const winston = require('winston');
-const util = require('util');
 const logger = new (winston.Logger)({
   transports: [
     new winston.transports.Console({
