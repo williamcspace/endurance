@@ -55,40 +55,12 @@ const config = (level) => {
   }
 };
 
-const log = (err) => {
-  console.log(err);
-};
-
-const error = (err) => {
-  logger.error(err);
-};
-
-const warn = (err) => {
-  logger.warn(err);
-};
-
-const info = (err) => {
-  logger.info(err);
-};
-
-const verbose = (err) => {
-  logger.verbose(err);
-};
-
-const debug = (err) => {
-  logger.debug(err);
-};
-
-const silly = (err) => {
-  logger.debug(err);
-};
-
 exports.level = LOG_LEVEL;
 exports.config = config;
-exports.log = log;
-exports.error = error;
-exports.warn = warn;
-exports.info = info;
-exports.verbose = verbose;
-exports.debug = debug;
-exports.silly = silly;
+exports.log = (err) => console.log(err);
+exports.error = (err) => logger.error(err);
+exports.warn = (err) => logger.warn(err);
+exports.info = (err) => logger.info(err);
+exports.verbose = (err) => logger.verbose(err);
+exports.debug = (err) => logger.debug(err);
+exports.silly = (err) => logger.debug(err);
