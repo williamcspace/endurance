@@ -32,7 +32,6 @@ TODO:
 Design
 -----------
 
-- Embrace ES6, FLegacy.
 - Transport Layer (TCP/UDP)
 - Encryption Layer (SS, OpenSSL)
 
