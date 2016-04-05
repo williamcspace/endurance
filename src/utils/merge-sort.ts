@@ -21,7 +21,7 @@ function _merge(left, right, comparison) {
   return result;
 };
 
-export function mergeSort(array, comparison) {
+export = function mergeSort(array, comparison) {
   if (array.length < 2) {
     return array;
   }

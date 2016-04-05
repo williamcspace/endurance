@@ -47,7 +47,7 @@
 
 import * as logger from './utils/logger';
 import * as inet from './utils/inet';
-import * as Encryptor from './crypto/encryptor';
+import Encryptor = require('./crypto/encryptor');
 import * as dgram from 'dgram';
 import * as net from 'net';
 import * as LRUCache from 'lru-cache';

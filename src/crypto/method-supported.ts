@@ -1,6 +1,6 @@
 'use strict';
 
-export const METHOD_SUPPORTED = {
+export = {
   'aes-128-cfb': [16, 16],
   'aes-192-cfb': [24, 16],
   'aes-256-cfb': [32, 16],

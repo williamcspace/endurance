@@ -1,8 +1,9 @@
 'use strict';
 
 import * as crypto from 'crypto';
-import {EVPBytesToKey} from './evp-bytes-to-key';
-import {METHOD_SUPPORTED} from './method-supported';
+
+import EVPBytesToKey = require('./evp-bytes-to-key');
+import METHOD_SUPPORTED = require('./method-supported');
 
 function verifyMethod(method) {
   if (!method) {
