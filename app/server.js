@@ -1,23 +1,23 @@
 'use strict';
 
-const net = require('net');
-const fs = require('fs');
-const path = require('path');
-const udpRelay = require('./udprelay');
-const cli = require('./utils/cli');
-const logger = require('./utils/logger');
-const inet = require('./utils/inet');
+const net       = require('net');
+const fs        = require('fs');
+const path      = require('path');
+const udpRelay  = require('./udprelay');
+const cli       = require('./utils/cli');
+const logger    = require('./utils/logger');
+const inet      = require('./utils/inet');
 const Encryptor = require('./crypto/encryptor');
-const _ = require('lodash');
+const _         = require('lodash');
 
 const main = (config) => {
   logger.info('Starting server...');
 
   const serverAddress = config.server_address;
-  const serverPort = config.server_port;
-  const password = config.password;
-  const method = config.method;
-  const timeout = Math.floor(config.timeout * 1000) || 300000;
+  const serverPort    = config.server_port;
+  const password      = config.password;
+  const method        = config.method;
+  const timeout       = Math.floor(config.timeout * 1000) || 300000;
 
   logger.info('calculating ciphers for port ' + serverPort);
 
@@ -29,15 +29,15 @@ const main = (config) => {
     logger.info('server listening at ' + server.address().address + ':' + server.address().port);
   });
   server.on('connection', (connection) => {
-    let encryptor = new Encryptor(password, method);
-    let stage = 0;
+    let encryptor    = new Encryptor(password, method);
+    let stage        = 0;
     let headerLength = 0;
-    let remote = null;
+    let remote       = null;
     let cachedPieces = [];
-    let addrLen = 0;
-    let remoteAddr = null;
-    let remotePort = null;
-    let connections = 1;
+    let addrLen      = 0;
+    let remoteAddr   = null;
+    let remotePort   = null;
+    let connections  = 1;
     logger.debug('connections: ' + connections);
 
     connection.on('data', (buffer) => {
@@ -80,16 +80,16 @@ const main = (config) => {
           }
 
           if (addrtype === 1) {
-            remoteAddr = inet.ntoa(data.slice(1, 5));
-            remotePort = data.readUInt16BE(5);
+            remoteAddr   = inet.ntoa(data.slice(1, 5));
+            remotePort   = data.readUInt16BE(5);
             headerLength = 7;
           } else if (addrtype === 4) {
-            remoteAddr = inet.ntop(data.slice(1, 17));
-            remotePort = data.readUInt16BE(17);
+            remoteAddr   = inet.ntop(data.slice(1, 17));
+            remotePort   = data.readUInt16BE(17);
             headerLength = 19;
           } else {
-            remoteAddr = data.slice(2, 2 + addrLen).toString('binary');
-            remotePort = data.readUInt16BE(2 + addrLen);
+            remoteAddr   = data.slice(2, 2 + addrLen).toString('binary');
+            remotePort   = data.readUInt16BE(2 + addrLen);
             headerLength = 2 + addrLen + 2;
           }
           connection.pause();

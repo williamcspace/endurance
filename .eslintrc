@@ -17,6 +17,7 @@
         "allowTernary": true
       }
     ],
+    "no-multi-spaces": 0,
     "spaced-comment": 0,
     "func-names": 0,
     "no-loop-func": 0,

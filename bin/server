@@ -2,18 +2,16 @@
 'use strict';
 
 const packageFile = require('../package.json');
-const configFile = require('../config.json');
-
-const path = require('path');
-const fs = require('fs');
-const _ = require('lodash');
-
-const cli = require('../app/utils/cli');
-const logger = require('../app/utils/logger');
+const configFile  = require('../config.json');
+const path        = require('path');
+const fs          = require('fs');
+const _           = require('lodash');
+const cli         = require('../app/utils/cli');
+const logger      = require('../app/utils/logger');
 
 const ROOT_PATH = global.ROOT_PATH = path.join(path.resolve(__dirname), '/../');
 const config = cli.loadConfig(true);
-const args = process.argv.slice(2);
+const args   = process.argv.slice(2);
 
 logger.info(packageFile.name + ' v' + packageFile.version);
 require(ROOT_PATH + 'app/server').main(config);
