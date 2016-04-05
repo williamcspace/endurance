@@ -1,11 +1,13 @@
 'use strict';
-const pack = require('../../package.json');
-const logger = require('./logger');
-const _ = require('lodash');
-const fs = require('fs');
-const path = require('path');
+import * as pack from '../../package.json';
+import * as logger from './logger';
+import * as _ from 'lodash';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const printLocalHelp = () => {
+
+
+function printLocalHelp() {
   return logger.log(`\
 usage: client [-h] -s SERVER_ADDR -p SERVER_PORT [-b LOCAL_ADDR] -l LOCAL_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]
 
@@ -22,7 +24,7 @@ optional arguments:
 `);
 };
 
-const printServerHelp = () => {
+function printServerHelp() {
   return logger.log(`\
 usage: server [-h] -s SERVER_ADDR -p SERVER_PORT -k PASSWORD -m METHOD [-t TIMEOUT] [-c config]
 
@@ -37,7 +39,7 @@ optional arguments:
 `);
 };
 
-const parseArgs = (isServerFlag) => {
+export function parseArgs(isServerFlag) {
   const result = {};
   const args = process.argv;
   if (args <= 0) {
@@ -66,6 +68,7 @@ const parseArgs = (isServerFlag) => {
       lastKey = DEFINITION[arg];
       nextIsValue = true;
     } else if (arg === '-v') {
+      //noinspection TypeScriptUnresolvedVariable
       result.verbose = true;
     } else if (arg.indexOf('-') === 0) {
       isServer ? printServerHelp() : printLocalHelp();
@@ -76,7 +79,7 @@ const parseArgs = (isServerFlag) => {
   return result;
 };
 
-const verifyConfig = (config) => {
+export function verifyConfig(config) {
   logger.info('Verifying Config File...');
 
   if (!(config.server_address && config.server_port && config.password && config.method)) {
@@ -85,6 +88,7 @@ const verifyConfig = (config) => {
   }
 
   if (config.verbose) {
+    //noinspection TypeScriptUnresolvedFunction
     logger.config(logger.level.DEBUG);
   }
 
@@ -93,9 +97,10 @@ const verifyConfig = (config) => {
   }
 };
 
-const loadConfig = (isServerFlag) => {
+export function loadConfig(isServerFlag) {
   const configFromArgs = parseArgs(isServerFlag);
   const configFile = configFromArgs.config_file || 'config.json';
+  //noinspection TypeScriptUnresolvedVariable
   const configPath = path.join(global.ROOT_PATH, configFile);
 
   try {
@@ -109,6 +114,7 @@ const loadConfig = (isServerFlag) => {
 
   let config;
   try {
+    //noinspection TypeScriptValidateTypes
     config = JSON.parse(fs.readFileSync(configFile));
   } catch (error) {
     logger.error('[CONFIG]: ' + error.message);
@@ -117,6 +123,7 @@ const loadConfig = (isServerFlag) => {
 
   const result = _.assign(config, configFromArgs);
   if (result.method) {
+    //noinspection TypeScriptUnresolvedVariable
     result.method = result.method.toLowerCase();
   }
   verifyConfig(result);
@@ -124,7 +131,4 @@ const loadConfig = (isServerFlag) => {
   return result;
 };
 
-exports.version = pack.name + ' v' + pack.version;
-exports.loadConfig = loadConfig;
-exports.parseArgs = parseArgs;
-exports.verifyConfig = verifyConfig;
+export const version = pack.name + ' v' + pack.version;

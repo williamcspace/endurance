@@ -1,16 +1,14 @@
-'use strict';
+import * as net from 'net';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as udpRelay from './udprelay';
+import * as cli from './utils/cli';
+import * as logger from './utils/logger';
+import * as inet from './utils/inet';
+import * as _ from 'lodash';
+import Encryptor = require('./crypto/encryptor');
 
-const net       = require('net');
-const fs        = require('fs');
-const path      = require('path');
-const udpRelay  = require('./udprelay');
-const cli       = require('./utils/cli');
-const logger    = require('./utils/logger');
-const inet      = require('./utils/inet');
-const Encryptor = require('./crypto/encryptor');
-const _         = require('lodash');
-
-const main = (config) => {
+export function main(config) {
   logger.info('Starting server...');
 
   const serverAddress = config.server_address;
@@ -252,5 +250,3 @@ const main = (config) => {
     //udpServer.close();
   });
 };
-
-exports.main = main;

@@ -1,35 +1,23 @@
-'use strict';
+//dependencies
+var gulp  = require('gulp');
+var del = require('del');
+var ts = require('gulp-typescript');
 
-var gulp          = require('gulp');
-var util          = require('util');
-var child_process = require('child_process');
-var eslint        = require('gulp-eslint');
+var tsConfig = require('./tsconfig.json');
 
-gulp.task('build', function () {
-  print('should i make a build script?');
-  return null;
+//Typescript Config;
+var tsProject = ts.createProject('tsconfig.json');
+
+//clean the dist folder
+gulp.task('clean:app', function() {
+  return del(['app']);
 });
 
-gulp.task('test', function () {
-  var proc = child_process.spawn('node', ['test/test.js']);
-  proc.stderr.on('data', function (data) {
-    process.stderr.write(data.toString());
-  });
-
-  proc.stdout.on('data', function (data) {
-    util.log(data.toString());
-  });
-
-  proc.stdout.on('exit', function (code) {
-    if (code != 0) {
-      process.exit(code);
-    }
-  });
+//compile app typescript files
+gulp.task('compile:app', function() {
+  return tsProject.src('src/**/*.ts')
+    .pipe(ts(tsProject))
+    .pipe(gulp.dest('app'))
 });
 
-gulp.task('lint', function () {
-  return gulp.src(['app/**/*.js', '!node_modules/**'])
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
-});
+gulp.task('build', ['clean:app', 'compile:app']);

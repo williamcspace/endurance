@@ -1,10 +1,10 @@
 'use strict';
 
-const crypto = require('crypto');
-const evpBytesToKey = require('./evp-bytes-to-key');
-const METHOD_SUPPORTED = require('./method-supported');
+import * as crypto from 'crypto';
+import {EVPBytesToKey} from './evp-bytes-to-key';
+import {METHOD_SUPPORTED} from './method-supported';
 
-const verifyMethod = (method) => {
+function verifyMethod(method) {
   if (!method) {
     throw new Error('method cannot be null!');
   }
@@ -22,7 +22,13 @@ const verifyMethod = (method) => {
   }
 };
 
-class Encryptor {
+export = class Encryptor {
+  private key;
+  private method;
+  private ivSent;
+  private cipher;
+  private cipherIv;
+  private decipher;
   constructor(key, method) {
     verifyMethod(method);
     this.key = key;
@@ -39,7 +45,7 @@ class Encryptor {
   getCipher(password, method, op, iVector) {
     verifyMethod(method);
     const cipherLength = this.getCipherLen(method);
-    const keyIv = evpBytesToKey(new Buffer(password, 'binary'), cipherLength[0], cipherLength[1]);
+    const keyIv = EVPBytesToKey(new Buffer(password, 'binary'), cipherLength[0], cipherLength[1]);
     const key = keyIv[0];
     const iv_ = keyIv[1];
     let iv = iVector || iv_;
@@ -81,13 +87,13 @@ class Encryptor {
     return this.decipher.update(buf.slice(decipherIvLen));
   }
 
-  static encryptAll(password, method, op, data) {
+  encryptAll(password, method, op, data) {
     verifyMethod(method);
     const result = [];
     const ref1 = this.getCipherLen(method);
     const keyLen = ref1[0];
     const ivLen = ref1[1];
-    const ref2 = evpBytesToKey(new Buffer(password, 'binary'), keyLen, ivLen);
+    const ref2 = EVPBytesToKey(new Buffer(password, 'binary'), keyLen, ivLen);
     const key = ref2[0];
     const iv_ = ref2[1];
 
@@ -109,5 +115,3 @@ class Encryptor {
     return Buffer.concat(result);
   }
 }
-
-module.exports = Encryptor;

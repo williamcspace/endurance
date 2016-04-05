@@ -1,7 +1,7 @@
 'use strict';
-const crypto = require('crypto');
+import * as crypto from 'crypto';
 
-const createCipher = (key, iv, op) => {
+export function createCipher (key, iv, op) {
   const md5 = crypto.createHash('md5');
   md5.update(key);
   md5.update(iv);
@@ -12,5 +12,3 @@ const createCipher = (key, iv, op) => {
 
   return crypto.createDecipheriv('rc4', rc4Key, '');
 };
-
-exports.createCipher = createCipher;

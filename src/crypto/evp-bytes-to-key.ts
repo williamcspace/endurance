@@ -1,9 +1,9 @@
 'use strict';
-const crypto = require('crypto');
+import * as crypto from 'crypto';
 
 const results = {};
 
-const EVPBytesToKey = (password, keyLen, ivLen) => {
+export function EVPBytesToKey (password, keyLen, ivLen) {
   if (results[password + ':' + keyLen + ':' + ivLen]) {
     return results[password + ':' + keyLen + ':' + ivLen];
   }
@@ -26,5 +26,3 @@ const EVPBytesToKey = (password, keyLen, ivLen) => {
   results[password] = [key, iv];
   return [key, iv];
 };
-
-module.exports = EVPBytesToKey;

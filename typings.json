@@ -1,0 +1,8 @@
+{
+  "ambientDependencies": {
+    "lodash": "registry:dt/lodash#3.10.0+20160330154726",
+    "lru-cache": "registry:dt/lru-cache#2.5.0+20160317120654",
+    "node": "registry:dt/node#4.0.0+20160330064709",
+    "winston": "registry:dt/winston#0.0.0+20160324163241"
+  }
+}

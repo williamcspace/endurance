@@ -1,16 +1,16 @@
 'use strict';
 
-const net = require('net');
-const fs = require('fs');
-const path = require('path');
-const udpRelay = require('./udprelay');
-const cli = require('./utils/cli');
-const logger = require('./utils/logger');
-const inet = require('./utils/inet');
-const Encryptor = require('./crypto/encryptor');
-const _ = require('lodash');
+import * as net from 'net';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as udpRelay from './udprelay';
+import * as cli from './utils/cli';
+import * as logger from './utils/logger';
+import * as inet from './utils/inet';
+import * as _ from 'lodash';
+import Encryptor = require('./crypto/encryptor');
 
-const getAddressPort = (ip, port) => {
+function getAddressPort(ip, port) {
   let aServer = ip;
   let aPort = port;
 
@@ -31,7 +31,7 @@ const getAddressPort = (ip, port) => {
   return [aServer, aPort];
 };
 
-const main = (config) => {
+export function main(config) {
   logger.info('Starting client...');
 
   const serverAddress = config.server_address || '127.0.0.1';
@@ -313,5 +313,3 @@ const main = (config) => {
     //udpClient.close();
   });
 };
-
-exports.main = main;

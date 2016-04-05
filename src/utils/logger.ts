@@ -1,5 +1,6 @@
 'use strict';
-const winston = require('winston');
+import * as winston from 'winston';
+
 const logger = new (winston.Logger)({
   transports: [
     new winston.transports.Console({
@@ -29,27 +30,34 @@ const LOG_LEVEL = {
   SILLY: 5,
 };
 
-const config = (level) => {
+function config (level) {
   switch (level) {
     case 0:
+      //noinspection TypeScriptUnresolvedVariable
       logger.level = 'error';
       break;
     case 1:
+      //noinspection TypeScriptUnresolvedVariable
       logger.level = 'warn';
       break;
     case 2:
+      //noinspection TypeScriptUnresolvedVariable
       logger.level = 'info';
       break;
     case 3:
+      //noinspection TypeScriptUnresolvedVariable
       logger.level = 'verbose';
       break;
     case 4:
+      //noinspection TypeScriptUnresolvedVariable
       logger.level = 'debug';
       break;
     case 5:
+      //noinspection TypeScriptUnresolvedVariable
       logger.level = 'silly';
       break;
     default:
+      //noinspection TypeScriptUnresolvedVariable
       logger.level = 'debug';
       break;
   }
@@ -61,6 +69,7 @@ exports.log = (err) => console.log(err);
 exports.error = (err) => logger.error(err);
 exports.warn = (err) => logger.warn(err);
 exports.info = (err) => logger.info(err);
+//noinspection TypeScriptUnresolvedFunction
 exports.verbose = (err) => logger.verbose(err);
 exports.debug = (err) => logger.debug(err);
 exports.silly = (err) => logger.debug(err);

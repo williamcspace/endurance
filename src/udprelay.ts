@@ -45,12 +45,12 @@
  */
 'use strict';
 
-const logger = require('./utils/logger');
-const inet = require('./utils/inet');
-const Encryptor = require('./crypto/encryptor');
-const dgram = require('dgram');
-const net = require('net');
-const LRUCache = require('lru-cache');
+import * as logger from './utils/logger';
+import * as inet from './utils/inet';
+import * as Encryptor from './crypto/encryptor';
+import * as dgram from 'dgram';
+import * as net from 'net';
+import * as LRUCache from 'lru-cache';
 
 const encrypt = (password, method, data) => {
   try {
@@ -191,6 +191,7 @@ const createServer = (listenAddr, listenPort, remoteAddr, remotePort, password, 
           responseHeader.write('\x01', 0);
           serverIPBuf.copy(responseHeader, 1, 0, 4);
           responseHeader.writeUInt16BE(rinfo1.port, 5);
+          //noinspection TypeScriptValidateTypes
           data2 = Buffer.concat([responseHeader, data1]);
           data2 = encrypt(password, method, data2);
           if (!data2) {
@@ -215,6 +216,7 @@ const createServer = (listenAddr, listenPort, remoteAddr, remotePort, password, 
         const cHeaderLength = headerResult[3];
 
         logger.debug('UDP recv from ' + cDestAddr + ':' + cDestPort);
+        //noinspection TypeScriptValidateTypes
         data2 = Buffer.concat([responseHeader, data2]);
 
         server.send(data2, 0, data2.length, rinfo.port, rinfo.address, (err, bytes) => {

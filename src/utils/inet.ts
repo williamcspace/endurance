@@ -1,5 +1,5 @@
 'use strict';
-const aton = (ipStr) => {
+export function aton (ipStr) {
   const parts = ipStr.split('.');
   if (parts.length !== 4) {
     return null;
@@ -13,13 +13,13 @@ const aton = (ipStr) => {
   return buf;
 };
 
-const ntoa = (buf) => {
+export function ntoa(buf) {
   return buf[0] + '.' + buf[1] + '.' + buf[2] + '.' + buf[3];
 };
 
 // Converts a packed internet address to a human readable representation
 // string ntop ( string $in_addr )
-const ntop = (inAddr) => {
+export function ntop(inAddr) {
   //  discuss at: http://phpjs.org/functions/inet_ntop/
   // original by: Theriault
   //   example 1: ntop('\x7F\x00\x00\x01');
@@ -59,7 +59,7 @@ const ntop = (inAddr) => {
 
 // Converts a human readable IP address to its packed in_addr representation
 // string pton ( string $address )
-const pton = (a) => {
+export function pton(a) {
   //  discuss at: http://phpjs.org/functions/inet_pton/
   // original by: Theriault
   //   example 1: pton('::');
@@ -112,8 +112,3 @@ const pton = (a) => {
   // Invalid IP.
   return false;
 };
-
-exports.aton = aton;
-exports.ntoa = ntoa;
-exports.ntop = ntop;
-exports.pton = pton;
