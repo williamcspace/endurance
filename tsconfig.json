@@ -8,8 +8,8 @@
     "noImplicitAny": false
   },
   "exclude": [
-    "typings/main.d.ts",
-    "typings/main",
+    "typings/browser.d.ts",
+    "typings/browser",
     "node_modules"
   ],
   "compileOnSave": false,

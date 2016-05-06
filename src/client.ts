@@ -3,12 +3,12 @@
 import * as net from 'net';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as _ from 'lodash';
 import * as udpRelay from './udprelay';
 import * as cli from './utils/cli';
 import * as logger from './utils/logger';
 import * as inet from './utils/inet';
-import * as _ from 'lodash';
-import Encryptor = require('./crypto/encryptor');
+import * as Encryptor from './crypto/encryptor';
 
 function getAddressPort(ip, port) {
   let aServer = ip;
