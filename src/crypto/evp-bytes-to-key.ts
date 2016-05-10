@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 const results = {};
 
-export = function EVPBytesToKey (password, keyLen, ivLen) {
+export function EVPBytesToKey (password, keyLen, ivLen) {
   if (results[password + ':' + keyLen + ':' + ivLen]) {
     return results[password + ':' + keyLen + ':' + ivLen];
   }

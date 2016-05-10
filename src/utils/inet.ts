@@ -54,7 +54,7 @@ export function ntop(inAddr) {
   }
 
   // Invalid length
-  return false;
+  return null;
 };
 
 // Converts a human readable IP address to its packed in_addr representation

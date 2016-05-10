@@ -8,7 +8,7 @@ import * as udpRelay from './udprelay';
 import * as cli from './utils/cli';
 import * as logger from './utils/logger';
 import * as inet from './utils/inet';
-import * as Encryptor from './crypto/encryptor';
+import {Encryptor} from './crypto/encryptor';
 
 function getAddressPort(ip, port) {
   let aServer = ip;

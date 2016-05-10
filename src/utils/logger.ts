@@ -21,7 +21,7 @@ const logger = new (winston.Logger)({
   ],
 });
 
-const LOG_LEVEL = {
+export const LOG_LEVEL = {
   ERROR: 0,
   WARN: 1,
   INFO: 2,
@@ -30,7 +30,7 @@ const LOG_LEVEL = {
   SILLY: 5,
 };
 
-function config (level) {
+export function config(level) {
   switch (level) {
     case 0:
       //noinspection TypeScriptUnresolvedVariable
@@ -61,15 +61,28 @@ function config (level) {
       logger.level = 'debug';
       break;
   }
-};
+}
 
-exports.level = LOG_LEVEL;
-exports.config = config;
-exports.log = (err) => console.log(err);
-exports.error = (err) => logger.error(err);
-exports.warn = (err) => logger.warn(err);
-exports.info = (err) => logger.info(err);
-//noinspection TypeScriptUnresolvedFunction
-exports.verbose = (err) => logger.verbose(err);
-exports.debug = (err) => logger.debug(err);
-exports.silly = (err) => logger.debug(err);
+export function log(err) {
+  console.log(err);
+}
+export function error(err) {
+  logger.error(err);
+}
+export function warn(err) {
+  logger.warn(err);
+}
+export function info(err) {
+  logger.info(err);
+}
+export function verbose(err) {
+  //noinspection TypeScriptUnresolvedFunction
+  // logger.verbose(err);
+  logger.debug(err);
+}
+export function debug(err) {
+  logger.debug(err);
+}
+export function silly(err) {
+  logger.debug(err);
+}

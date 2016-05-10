@@ -1,9 +1,8 @@
 'use strict';
 
 import * as crypto from 'crypto';
-
-import EVPBytesToKey = require('./evp-bytes-to-key');
-import METHOD_SUPPORTED = require('./method-supported');
+import {EVPBytesToKey} from './evp-bytes-to-key';
+import {METHOD_SUPPORTED} from './method-supported';
 
 function verifyMethod(method) {
   if (!method) {
@@ -21,15 +20,20 @@ function verifyMethod(method) {
   if (!METHOD_SUPPORTED[method]) {
     throw new Error('method `' + method + '` is not supported');
   }
-};
+}
 
-export = class Encryptor {
-  private key;
-  private method;
-  private ivSent;
-  private cipher;
-  private cipherIv;
-  private decipher;
+function getCipherLen(method) {
+  return METHOD_SUPPORTED[method];
+}
+
+export class Encryptor {
+  public key;
+  public method;
+  public ivSent;
+  public cipher;
+  public cipherIv;
+  public decipher;
+
   constructor(key, method) {
     verifyMethod(method);
     this.key = key;
@@ -38,14 +42,9 @@ export = class Encryptor {
     this.cipher = this.getCipher(this.key, this.method, 1, crypto.randomBytes(32));
   }
 
-  getCipherLen(method) {
-    verifyMethod(method);
-    return METHOD_SUPPORTED[method];
-  }
-
   getCipher(password, method, op, iVector) {
     verifyMethod(method);
-    const cipherLength = this.getCipherLen(method);
+    const cipherLength = getCipherLen(method);
     const keyIv = EVPBytesToKey(new Buffer(password, 'binary'), cipherLength[0], cipherLength[1]);
     const key = keyIv[0];
     const iv_ = keyIv[1];
@@ -54,10 +53,12 @@ export = class Encryptor {
       this.cipherIv = iv.slice(0, cipherLength[1]);
     }
     iv = iv.slice(0, cipherLength[1]);
+
+    //TODO: error TS2354: No best common type exists among return expressions.
     if (op === 1) {
-      return crypto.createCipheriv(method, key, iv);
+      return <any>crypto.createCipheriv(method, key, iv);
     }
-    return crypto.createDecipheriv(method, key, iv);
+    return <any>crypto.createDecipheriv(method, key, iv);
   }
 
   encrypt(buf) {
@@ -82,16 +83,16 @@ export = class Encryptor {
       return this.decipher.update(buf);
     }
 
-    const decipherIvLen = this.getCipherLen(this.method)[1];
+    const decipherIvLen = getCipherLen(this.method)[1];
     const decipherIv = buf.slice(0, decipherIvLen);
     this.decipher = this.getCipher(this.key, this.method, 0, decipherIv);
     return this.decipher.update(buf.slice(decipherIvLen));
   }
 
-  encryptAll(password, method, op, data) {
+  static encryptAll(password, method, op, data) {
     verifyMethod(method);
     const result = [];
-    const ref1 = this.getCipherLen(method);
+    const ref1 = METHOD_SUPPORTED[method];
     const keyLen = ref1[0];
     const ivLen = ref1[1];
     const ref2 = EVPBytesToKey(new Buffer(password, 'binary'), keyLen, ivLen);

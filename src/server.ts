@@ -6,7 +6,7 @@ import * as cli from './utils/cli';
 import * as logger from './utils/logger';
 import * as inet from './utils/inet';
 import * as _ from 'lodash';
-import Encryptor = require('./crypto/encryptor');
+import {Encryptor} from './crypto/encryptor';
 
 export function main(config) {
   logger.info('Starting server...');

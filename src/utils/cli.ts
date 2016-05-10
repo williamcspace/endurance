@@ -1,11 +1,12 @@
 'use strict';
-import * as pack from '../../package.json';
+declare const global;
+
+const pack = require('../../package.json');
+
 import * as logger from './logger';
 import * as _ from 'lodash';
 import * as fs from 'fs';
 import * as path from 'path';
-
-
 
 function printLocalHelp() {
   return logger.log(`\
@@ -42,7 +43,7 @@ optional arguments:
 export function parseArgs(isServerFlag) {
   const result = {};
   const args = process.argv;
-  if (args <= 0) {
+  if ((<any>args) <= 0) {
     return result;
   }
 
@@ -69,7 +70,7 @@ export function parseArgs(isServerFlag) {
       nextIsValue = true;
     } else if (arg === '-v') {
       //noinspection TypeScriptUnresolvedVariable
-      result.verbose = true;
+      (<any>result).verbose = true;
     } else if (arg.indexOf('-') === 0) {
       isServer ? printServerHelp() : printLocalHelp();
       process.exit(2);
@@ -89,7 +90,7 @@ export function verifyConfig(config) {
 
   if (config.verbose) {
     //noinspection TypeScriptUnresolvedFunction
-    logger.config(logger.level.DEBUG);
+    logger.config(logger.LOG_LEVEL.DEBUG);
   }
 
   if (config.method === 'rc4') {
@@ -98,9 +99,8 @@ export function verifyConfig(config) {
 };
 
 export function loadConfig(isServerFlag) {
-  const configFromArgs = parseArgs(isServerFlag);
+  const configFromArgs = (<any>parseArgs(isServerFlag));
   const configFile = configFromArgs.config_file || 'config.json';
-  //noinspection TypeScriptUnresolvedVariable
   const configPath = path.join(global.ROOT_PATH, configFile);
 
   try {
@@ -115,13 +115,14 @@ export function loadConfig(isServerFlag) {
   let config;
   try {
     //noinspection TypeScriptValidateTypes
-    config = JSON.parse(fs.readFileSync(configFile));
+    config = JSON.parse((<any>fs.readFileSync(configFile)));
   } catch (error) {
     logger.error('[CONFIG]: ' + error.message);
     process.exit(1);
   }
 
-  const result = _.assign(config, configFromArgs);
+  // const result = _.assign(config, configFromArgs);
+  const result = (<any>Object).assign(config, configFromArgs);
   if (result.method) {
     //noinspection TypeScriptUnresolvedVariable
     result.method = result.method.toLowerCase();

@@ -47,7 +47,7 @@
 
 import * as logger from './utils/logger';
 import * as inet from './utils/inet';
-import Encryptor = require('./crypto/encryptor');
+import {Encryptor} from './crypto/encryptor';
 import * as dgram from 'dgram';
 import * as net from 'net';
 import * as LRUCache from 'lru-cache';
@@ -124,13 +124,13 @@ const getUDPTypeByIP = (ip) => {
 
 const createServer = (listenAddr, listenPort, remoteAddr, remotePort, password, method, timeout, isLocal) => {
   const udpType = getUDPTypeByIP(listenAddr);
-  const clients = new LRUCache({
+  const clients = LRUCache((<any>{
     max: 500,
     maxAge: timeout,
     dispose: (key, value) => {
       value.close();
     },
-  });
+  }));
 
   const server = dgram.createSocket(udpType);
   server.on('message', (message, rinfo) => {
@@ -176,7 +176,7 @@ const createServer = (listenAddr, listenPort, remoteAddr, remotePort, password, 
     }
 
     const key = getClientKey(rinfo.address, rinfo.port, destAddr, destPort);
-    let client = clients.get(key);
+    let client = (<any>clients.get(key));
 
     if (!client) {
       const clientUdpType = getUDPTypeByIP(serverAddr);
@@ -236,7 +236,7 @@ const createServer = (listenAddr, listenPort, remoteAddr, remotePort, password, 
       clients.set(key, client);
     }
 
-    logger.debug('pairs: ' + clients.length());
+    // logger.debug('pairs: ' + clients.length());
     let dataToSend = msg.slice(sendDataOffset, msg.length);
 
     if (isLocal) {
