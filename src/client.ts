@@ -10,6 +10,8 @@ import * as logger from './utils/logger';
 import * as inet from './utils/inet';
 import {Encryptor} from './crypto/encryptor';
 
+import {aton,ntop,pton} from './utils/inet';
+
 function getAddressPort(ip, port) {
   let aServer = ip;
   let aPort = port;
